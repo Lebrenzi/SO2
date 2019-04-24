@@ -1,12 +1,4 @@
-#include "Direction.h"
-#include <random>
-#include <ctime>
-#include <string>
-#include <thread>
-#include <vector>
-#include <unistd.h>
-#include <cstdlib>
-
+#include "Platform.h"
 
 class Circle{
 
@@ -20,15 +12,25 @@ class Circle{
 	static bool initialized;
 	bool active;
 	
+//Orientational variables such as direction coordinates and speed of Circle
 	Direction dir;
 	double speed;
 	int coorX, coorY;
 
+//List of all platforms in the scene, equal to every circle in the scene
+	static vector<Platform> platforms;
+	Platform assignedPlatform;	
+
+//Operational functions
 	std::thread circleThread(); 
 	Circle();	
 	~Circle();
 	Circle(int coorX, int coorY);
+
 	static void initScene(int xMax, int yMax);
+	static void initPlatforms(vector<Platform> &platforms);
+
+	bool ifPlatform();
 	int getX();
 	int getY();
 	bool isActive();

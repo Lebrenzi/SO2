@@ -5,6 +5,7 @@ bool Circle::initialized = false;
 double Circle::GRAVITY = 0.6;
 int Circle::xMax;
 int Circle::yMax;
+vector<Platform> Circle::platforms;
 
 Circle::Circle(){
 	
@@ -50,6 +51,9 @@ void Circle::initScene(int xMax, int yMax){
 	Circle::initialized = true;
 }
 
+void Circle::initPlatforms(vector<Platform> &platforms){
+	Circle::platforms = platforms;
+}
 
 int Circle::getX(){
 	
@@ -69,6 +73,23 @@ int Circle::getY(){
 
 }
 
+
+bool Circle::ifPlatform(){
+	for ( int i = 0; i< platforms.size(); i++ ){
+		
+		if ( this-> coorY == platforms[i].getY() - 3 || this-> coorY == platforms[i].getY() + 3 )
+		{
+			if ( this-> coorX < platforms[i].getX() + 3 && this-> coorX > platforms[i].getX() - 3 )
+			{	this->dir = PLATFORM;
+				this->assignedPlatform = platforms[i];
+				move();
+				return true;
+			} 
+			else return false;
+		}
+	}
+	
+}
 
 
 double Circle::getSpeed(){
@@ -91,7 +112,8 @@ void Circle::move(){
 			while( this->coorY > 0 ){	
 				this->coorY--;
 				usleep(this->speed);
-				this->speed += 2300.0/GRAVITY;
+				ifPlatform();
+				this->speed += 3000.0/GRAVITY;
 				if(this->speed > 200000) break;
 			}
 			this->dir = SOUTH;
@@ -113,7 +135,8 @@ void Circle::move(){
 			while( this->coorY < yMax - 1 ){	
 				this->coorY++;
 				usleep(this->speed);
-				this->speed -= 2300.0/GRAVITY;
+				ifPlatform();
+				this->speed -= 3000.0/GRAVITY;
 			}
 			this->dir = NORTH;
 			this->coorY = yMax - 1;
@@ -130,7 +153,8 @@ void Circle::move(){
 				this->coorY--;
 				this->coorX--;
 				usleep(this->speed);
-				this->speed += 2300.0/GRAVITY;
+				ifPlatform();
+				this->speed += 3000.0/GRAVITY;
 				if(this-> speed > 180000) break;
 			}
 			if( this->speed > 400000 ) {
@@ -161,7 +185,8 @@ void Circle::move(){
 				this->coorY--;
 				this->coorX++;
 				usleep(this->speed);
-				this->speed += 2300.0/GRAVITY;
+				ifPlatform();
+				this->speed += 3000.0/GRAVITY;
 				if(this-> speed > 180000) break;
 			}
 			if( this->speed > 400000 ){
@@ -190,7 +215,8 @@ void Circle::move(){
 				this->coorY++;
 				this->coorX++;
 				usleep(this->speed);
-				this->speed -= 2300.0/GRAVITY;
+				ifPlatform();
+				this->speed -= 3000.0/GRAVITY;
 
 			}
 			if( coorY == yMax-1 ){
@@ -212,7 +238,8 @@ void Circle::move(){
 				this->coorY++;
 				this->coorX--;
 				usleep(this->speed);
-				this->speed -= 2300.0/GRAVITY;
+				ifPlatform();
+				this->speed -= 3000.0/GRAVITY;
 
 			}
 			if( coorY == yMax-1 ){
@@ -228,7 +255,14 @@ void Circle::move(){
 			}
 			move();
 			break;
-
+		case PLATFORM:
+			while(true){
+				this->speed = assignedPlatform.getSpeed();
+				this->coorX = assignedPlatform.getX();
+				this->coorY = assignedPlatform.getY() + 1 ;
+				}
+			move();
+			break;
 		}
 	}
 }
