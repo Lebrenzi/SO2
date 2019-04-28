@@ -18,8 +18,8 @@ class Circle{
 	int coorX, coorY;
 
 //List of all platforms in the scene, equal to every circle in the scene
-	static vector<Platform> platforms;
-	Platform assignedPlatform;	
+	static vector<Platform> *platforms;
+	Platform *assignedPlatform;
 	bool isAttached;	
 
 //Operational functions
@@ -29,7 +29,7 @@ class Circle{
 	Circle(int coorX, int coorY);
 
 	static void initScene(int xMax, int yMax);
-	static void initPlatforms(vector<Platform> &platforms);
+	static void initPlatforms(vector<Platform> *platforms);
 
 	bool ifPlatform();
 	int getX();

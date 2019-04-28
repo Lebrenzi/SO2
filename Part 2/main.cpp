@@ -44,8 +44,8 @@ int main(){
 		Platform plat;
 		platVector.push_back(plat);
 	}
-	Circle::initPlatforms(platVector);
-	for(int i = 0 ; i < 20; i++) {
+	Circle::initPlatforms(&platVector);
+	for(int i = 0 ; i < 1; i++) {
 
 		Circle circ;
 		circVector.push_back(circ);

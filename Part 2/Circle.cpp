@@ -5,7 +5,7 @@ bool Circle::initialized = false;
 double Circle::GRAVITY = 0.6;
 int Circle::xMax;
 int Circle::yMax;
-vector<Platform> Circle::platforms;
+vector<Platform>* Circle::platforms;
 
 Circle::Circle(){
 	
@@ -52,7 +52,7 @@ void Circle::initScene(int xMax, int yMax){
 	Circle::initialized = true;
 }
 
-void Circle::initPlatforms(vector<Platform> &platforms){
+void Circle::initPlatforms(vector<Platform> *platforms){
 	Circle::platforms = platforms;
 }
 
@@ -76,14 +76,14 @@ int Circle::getY(){
 
 
 bool Circle::ifPlatform(){
-	for ( int i = 0; i< platforms.size(); i++ ){
-		
-		if ( this-> coorY == platforms[i].getY() - 3 || this-> coorY == platforms[i].getY() + 3 )
+	for ( int i = 0; i< platforms->size(); i++ ){
+		for(int j = 0; j< platforms[i].size(); j++ )
+		if ( this-> coorY == platforms[i][j].coorY - 3 || this-> coorY == platforms[i][j].coorY + 3 )
 		{
 			//if ( this-> coorX < platforms[i].getX() + 3 && this-> coorX > platforms[i].getX() - 3 )
 				this->isAttached = true;
-				this->dir = platforms[i].dir;
-				this->assignedPlatform = platforms[i];
+				this->dir = PLATFORM;
+				this->assignedPlatform = &platforms[i][j];
 				move();
 				return true;
 		} 
@@ -107,195 +107,191 @@ void Circle::move(){
 	// Circle moves depending on the direction
 	// Gravity accelerates or stops circle depends on direction
 	// Using switch check all routes
-	while(this->active){
-	switch(this->dir){
+	while(this->active) {
+        switch (this->dir) {
 
-		case NORTH:
-			while( this->coorY > 0 ){	
-				this->coorY--;
-				usleep(this->speed);
-				ifPlatform();
-				this->speed += 3000.0/GRAVITY;
-				if(this->speed > 200000) break;
-			}
-			this->dir = SOUTH;
-			if(speed < 200000){
-				this->speed *= 1.5;
-			}
-			else {
-				if(this->speed < 400000) this->speed *= 1.5;
-				else{
-					this->active = false;
-					return;
-				}	
-			}
-			move();
-			break;
-
-
-		case SOUTH:
-			while( this->coorY < yMax - 1 ){	
-				this->coorY++;
-				usleep(this->speed);
-				ifPlatform();
-				this->speed -= 3000.0/GRAVITY;
-			}
-			this->dir = NORTH;
-			this->coorY = yMax - 1;
-			if(this->speed < 400000) this->speed *= 1.5;
-			/*else{
-				this->active = false;
-				return;	
-			}*/
-			move();
-			break;
-
-		case NORTH_WEST:
-			while ( this-> coorY > 0 && this->coorX > 0 ){
-				this->coorY--;
-				this->coorX--;
-				usleep(this->speed);
-				ifPlatform();
-				this->speed += 3000.0/GRAVITY;
-				if(this-> speed > 180000) break;
-			}
-			if( this->speed > 400000 ) {
-			
-				this->active = false;
-				return;
-			}
-			if( coorY == 0 ){
-				this->dir = SOUTH_WEST;
-				this->speed *= 1.5;
-			}
-			else{
-				if ( coorX == 0 ){
-					this->dir = NORTH_EAST;
-					this->speed *= 1.5;
-				}
-			
-				else{
-					this->dir = SOUTH_WEST;
-					this->speed *= 1.5;
-				}
-			}
-			move();
-			break;
-
-		case NORTH_EAST:
-			while ( this-> coorY > 0 && this->coorX < xMax -1 ){
-				this->coorY--;
-				this->coorX++;
-				usleep(this->speed);
-				ifPlatform();
-				this->speed += 3000.0/GRAVITY;
-				if(this-> speed > 180000) break;
-			}
-			if( this->speed > 400000 ){
-				this->active = false;
-				return;
-			}
-			if( coorY == 0 ){
-				this->dir = SOUTH_EAST;
-				this->speed *= 1.5;
-			}
-			else{
-				if ( coorX == xMax-1 ){
-					this->dir = NORTH_WEST;
-					this->speed *= 1.5;
-				}
-				else{
-					this->dir = SOUTH_EAST;
-					this->speed *= 1.5;
-				}
-			}
-			move();
-			break;
-
-		case SOUTH_EAST:
-			while ( this-> coorY < yMax -1 && this->coorX < xMax -1 ){
-				this->coorY++;
-				this->coorX++;
-				usleep(this->speed);
-				ifPlatform();
-				this->speed -= 3000.0/GRAVITY;
-
-			}
-			if( coorY == yMax-1 ){
-				this->dir = NORTH_EAST;
-				this->speed *= 1.5;
-
-			}
-			else {
-				if( coorX == xMax-1 ) {
-					this->dir = SOUTH_WEST;
-					this->speed *= 1.5;
-				}
-			}
-			move();
-			break;
-	
-		case SOUTH_WEST:
-			while ( this-> coorY < yMax -1 && this->coorX > 0 ){
-				this->coorY++;
-				this->coorX--;
-				usleep(this->speed);
-				ifPlatform();
-				this->speed -= 3000.0/GRAVITY;
-
-			}
-			if( coorY == yMax-1 ){
-				this->dir = NORTH_WEST;
-				this->speed *= 1.5;
-
-			}
-			else {
-				if( coorX == 0 ) {
-					this->dir = SOUTH_EAST;
-					this->speed *= 1.5;
-				}
-			}
-			move();
-			break;
-		case WEST:
-			if(isAttached){
-				coorX = this->assignedPlatform.coorX;
-				coorY = this->assignedPlatform.coorY;
-				while (  this-> coorX > 0 ) {
-					this -> coorX--;
-					usleep(assignedPlatform.speed);
-				}	
-				if ( coorX == 0 ) {
-					this->dir = assignedPlatform.dir;
-				}
-				move();
-				break;
+            case NORTH:
+                while (this->coorY > 0) {
+                    this->coorY--;
+                    usleep(this->speed);
+                    ifPlatform();
+                    this->speed += 3000.0 / GRAVITY;
+                    if (this->speed > 200000) break;
+                }
+                this->dir = SOUTH;
+                if (speed < 200000) {
+                    this->speed *= 1.5;
+                } else {
+                    if (this->speed < 400000) this->speed *= 1.5;
+                    else {
+                        this->active = false;
+                        return;
+                    }
+                }
+                move();
+                break;
 
 
-			}
-			else
-			{
-				break;
-			}
-			
-		case EAST:
-			if(isAttached){
-				coorX = this->assignedPlatform.coorX;
-				coorY = this->assignedPlatform.coorY;
-				while (  this-> coorX < xMax -1 ) {
-					this -> coorX++;
-					usleep(assignedPlatform.speed);
-				}	
-				if ( coorX == xMax -1 ) {
-					this->dir = assignedPlatform.dir;
-				}
-				move();
-				break;
-			}
-			else
-			{break;}
-		}
+            case SOUTH:
+                while (this->coorY < yMax - 1) {
+                    this->coorY++;
+                    usleep(this->speed);
+                    ifPlatform();
+                    this->speed -= 3000.0 / GRAVITY;
+                }
+                this->dir = NORTH;
+                this->coorY = yMax - 1;
+                if (this->speed < 400000) this->speed *= 1.5;
+                /*else{
+                    this->active = false;
+                    return;
+                }*/
+                move();
+                break;
 
+            case NORTH_WEST:
+                while (this->coorY > 0 && this->coorX > 0) {
+                    this->coorY--;
+                    this->coorX--;
+                    usleep(this->speed);
+                    ifPlatform();
+                    this->speed += 3000.0 / GRAVITY;
+                    if (this->speed > 180000) break;
+                }
+                if (this->speed > 400000) {
+
+                    this->active = false;
+                    return;
+                }
+                if (coorY == 0) {
+                    this->dir = SOUTH_WEST;
+                    this->speed *= 1.5;
+                } else {
+                    if (coorX == 0) {
+                        this->dir = NORTH_EAST;
+                        this->speed *= 1.5;
+                    } else {
+                        this->dir = SOUTH_WEST;
+                        this->speed *= 1.5;
+                    }
+                }
+                move();
+                break;
+
+            case NORTH_EAST:
+                while (this->coorY > 0 && this->coorX < xMax - 1) {
+                    this->coorY--;
+                    this->coorX++;
+                    usleep(this->speed);
+                    ifPlatform();
+                    this->speed += 3000.0 / GRAVITY;
+                    if (this->speed > 180000) break;
+                }
+                if (this->speed > 400000) {
+                    this->active = false;
+                    return;
+                }
+                if (coorY == 0) {
+                    this->dir = SOUTH_EAST;
+                    this->speed *= 1.5;
+                } else {
+                    if (coorX == xMax - 1) {
+                        this->dir = NORTH_WEST;
+                        this->speed *= 1.5;
+                    } else {
+                        this->dir = SOUTH_EAST;
+                        this->speed *= 1.5;
+                    }
+                }
+                move();
+                break;
+
+            case SOUTH_EAST:
+                while (this->coorY < yMax - 1 && this->coorX < xMax - 1) {
+                    this->coorY++;
+                    this->coorX++;
+                    usleep(this->speed);
+                    ifPlatform();
+                    this->speed -= 3000.0 / GRAVITY;
+
+                }
+                if (coorY == yMax - 1) {
+                    this->dir = NORTH_EAST;
+                    this->speed *= 1.5;
+
+                } else {
+                    if (coorX == xMax - 1) {
+                        this->dir = SOUTH_WEST;
+                        this->speed *= 1.5;
+                    }
+                }
+                move();
+                break;
+
+            case SOUTH_WEST:
+                while (this->coorY < yMax - 1 && this->coorX > 0) {
+                    this->coorY++;
+                    this->coorX--;
+                    usleep(this->speed);
+                    ifPlatform();
+                    this->speed -= 3000.0 / GRAVITY;
+
+                }
+                if (coorY == yMax - 1) {
+                    this->dir = NORTH_WEST;
+                    this->speed *= 1.5;
+
+                } else {
+                    if (coorX == 0) {
+                        this->dir = SOUTH_EAST;
+                        this->speed *= 1.5;
+                    }
+                }
+                move();
+                break;
+            case WEST:
+                if (isAttached) {
+                    coorX = this->assignedPlatform->coorX;
+                    coorY = this->assignedPlatform->coorY;
+                    while (this->coorX > 0) {
+                        this->coorX--;
+                        usleep(assignedPlatform->speed);
+                    }
+                    if (coorX == 0) {
+                        this->dir = assignedPlatform->dir;
+                    }
+                    move();
+                    break;
+
+
+                } else {
+                    break;
+                }
+
+            case EAST:
+                if (isAttached) {
+                    coorX = this->assignedPlatform->coorX;
+                    coorY = this->assignedPlatform->coorY;
+                    while (this->coorX < xMax - 1) {
+                        this->coorX++;
+                        usleep(assignedPlatform->speed);
+                    }
+                    if (coorX == xMax - 1) {
+                        this->dir = assignedPlatform->dir;
+                    }
+                    move();
+                    break;
+                } else { break; }
+
+
+        case PLATFORM:
+            if (isAttached) {
+                coorX = this->assignedPlatform->coorX;
+                coorY = this->assignedPlatform->coorY;
+                move();
+                break;
+            }
+        }
 	}
 }
 
