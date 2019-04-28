@@ -21,7 +21,7 @@ class Circle{
 	static vector<Platform> *platforms;
 	Platform *assignedPlatform;
 	bool isAttached;	
-
+    int size;
 //Operational functions
 	std::thread circleThread(); 
 	Circle();	

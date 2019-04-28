@@ -76,21 +76,27 @@ int Circle::getY(){
 
 
 bool Circle::ifPlatform(){
-	for ( int i = 0; i< platforms->size(); i++ ){
-		for(int j = 0; j< platforms[i].size(); j++ )
-		if ( this-> coorY == platforms[i][j].coorY - 3 || this-> coorY == platforms[i][j].coorY + 3 )
-		{
-			//if ( this-> coorX < platforms[i].getX() + 3 && this-> coorX > platforms[i].getX() - 3 )
-				this->isAttached = true;
-				this->dir = PLATFORM;
-				this->assignedPlatform = &platforms[i][j];
-				move();
-				return true;
-		} 
-		else return false;
+
+	for ( int i = 0; i < 1; i++){
+
+		for(int j = 0; j< platforms[i].size(); j++ ){
+
+            Platform size = platforms[i][j];
+            if ( this-> coorY == platforms[i][j].coorY )
+            {
+                if ( this-> coorX < platforms[i][j].coorX + 1 && this-> coorX > platforms[i][j].coorY - 1 ) {
+                    this->isAttached = true;
+                    this->dir = PLATFORM;
+                    this->assignedPlatform = &platforms[i][j];
+                    move();
+                    vector<Platform> size = platforms[i];
+                    return true;
+                }
+            }
+		}
 	}
 }
-	
+
 
 
 
@@ -287,7 +293,8 @@ void Circle::move(){
         case PLATFORM:
             if (isAttached) {
                 coorX = this->assignedPlatform->coorX;
-                coorY = this->assignedPlatform->coorY;
+                coorY = this->assignedPlatform->coorY-1;
+                usleep(assignedPlatform->speed);
                 move();
                 break;
             }

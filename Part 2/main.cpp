@@ -39,13 +39,13 @@ int main(){
 	getmaxyx(stdscr, yMax, xMax);
 	Circle::initScene(xMax, yMax);
 	Platform::initScene(xMax, yMax);
-	for(int i = 0; i < 1; i++) {
+	for(int i = 0; i < 3; i++) {
 		
 		Platform plat;
 		platVector.push_back(plat);
 	}
 	Circle::initPlatforms(&platVector);
-	for(int i = 0 ; i < 1; i++) {
+	for(int i = 0 ; i < 3; i++) {
 
 		Circle circ;
 		circVector.push_back(circ);
