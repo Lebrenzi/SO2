@@ -79,13 +79,13 @@ bool Circle::ifPlatform(){
 		
 		if ( this-> coorY == platforms[i].getY() - 3 || this-> coorY == platforms[i].getY() + 3 )
 		{
-			if ( this-> coorX < platforms[i].getX() + 3 && this-> coorX > platforms[i].getX() - 3 )
+			//if ( this-> coorX < platforms[i].getX() + 3 && this-> coorX > platforms[i].getX() - 3 )
 			{	this->dir = PLATFORM;
 				this->assignedPlatform = platforms[i];
 				move();
 				return true;
 			} 
-			else return false;
+			//else return false;
 		}
 	}
 	
@@ -256,11 +256,10 @@ void Circle::move(){
 			move();
 			break;
 		case PLATFORM:
-			while(true){
-				this->speed = assignedPlatform.getSpeed();
-				this->coorX = assignedPlatform.getX();
-				this->coorY = assignedPlatform.getY() + 1 ;
-				}
+			this->speed = assignedPlatform.getSpeed();
+			this->coorX = assignedPlatform.getX();
+			this->coorY = assignedPlatform.getY() + 1 ;
+			usleep(this->speed);
 			move();
 			break;
 		}
