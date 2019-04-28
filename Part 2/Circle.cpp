@@ -10,7 +10,8 @@ vector<Platform> Circle::platforms;
 Circle::Circle(){
 	
 	this->active = true;
-	
+	this->isAttached = false;
+
 	// Rand to chose starting direction [ NORTH, NORTH_WEST, NORTH_EAST ]	
 	int choose = rand() % 3;
 	Direction array[3] = { NORTH , NORTH_WEST, NORTH_EAST };
@@ -80,16 +81,17 @@ bool Circle::ifPlatform(){
 		if ( this-> coorY == platforms[i].getY() - 3 || this-> coorY == platforms[i].getY() + 3 )
 		{
 			//if ( this-> coorX < platforms[i].getX() + 3 && this-> coorX > platforms[i].getX() - 3 )
-			{	this->dir = PLATFORM;
+				this->isAttached = true;
+				this->dir = platforms[i].dir;
 				this->assignedPlatform = platforms[i];
 				move();
 				return true;
-			} 
-			//else return false;
-		}
+		} 
+		else return false;
 	}
-	
 }
+	
+
 
 
 double Circle::getSpeed(){
@@ -255,14 +257,45 @@ void Circle::move(){
 			}
 			move();
 			break;
-		case PLATFORM:
-			this->speed = assignedPlatform.getSpeed();
-			this->coorX = assignedPlatform.getX();
-			this->coorY = assignedPlatform.getY() + 1 ;
-			usleep(this->speed);
-			move();
-			break;
+		case WEST:
+			if(isAttached){
+				coorX = this->assignedPlatform.coorX;
+				coorY = this->assignedPlatform.coorY;
+				while (  this-> coorX > 0 ) {
+					this -> coorX--;
+					usleep(assignedPlatform.speed);
+				}	
+				if ( coorX == 0 ) {
+					this->dir = assignedPlatform.dir;
+				}
+				move();
+				break;
+
+
+			}
+			else
+			{
+				break;
+			}
+			
+		case EAST:
+			if(isAttached){
+				coorX = this->assignedPlatform.coorX;
+				coorY = this->assignedPlatform.coorY;
+				while (  this-> coorX < xMax -1 ) {
+					this -> coorX++;
+					usleep(assignedPlatform.speed);
+				}	
+				if ( coorX == xMax -1 ) {
+					this->dir = assignedPlatform.dir;
+				}
+				move();
+				break;
+			}
+			else
+			{break;}
 		}
+
 	}
 }
 

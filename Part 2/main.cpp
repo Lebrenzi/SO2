@@ -39,13 +39,13 @@ int main(){
 	getmaxyx(stdscr, yMax, xMax);
 	Circle::initScene(xMax, yMax);
 	Platform::initScene(xMax, yMax);
-	for(int i = 0; i < 3; i++) {
+	for(int i = 0; i < 1; i++) {
 		
 		Platform plat;
 		platVector.push_back(plat);
 	}
 	Circle::initPlatforms(platVector);
-	for(int i = 0 ; i < 5; i++) {
+	for(int i = 0 ; i < 20; i++) {
 
 		Circle circ;
 		circVector.push_back(circ);
@@ -65,7 +65,7 @@ int main(){
 		threads.push_back( circVector.at(circlesUsed).circleThread() );
 		circlesUsed++;
 		int randTime = rand() % 5 + 1;
-		usleep(1000000 * randTime);
+		usleep(500000 * randTime);
 	
 	}
 

@@ -20,6 +20,7 @@ class Circle{
 //List of all platforms in the scene, equal to every circle in the scene
 	static vector<Platform> platforms;
 	Platform assignedPlatform;	
+	bool isAttached;	
 
 //Operational functions
 	std::thread circleThread(); 
