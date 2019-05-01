@@ -1,5 +1,8 @@
 #include "Circle.h"
+#include <mutex>
 
+std::mutex addingCircle;
+std::mutex deattachPlatform;
 // Fix initialized ; error : initialized is not static
 bool Circle::initialized = false;
 double Circle::GRAVITY = 0.6;
@@ -76,28 +79,54 @@ int Circle::getY(){
 
 
 bool Circle::ifPlatform(){
-
 	for ( int i = 0; i < 1; i++){
+		for(int j = 0; j< platforms[i].size(); j++ )
+		{
+		    if ( this-> coorY == platforms[i][j].coorY )
+		    {
+			if ( this-> coorX < platforms[i][j].coorX + 1 && this-> coorX > platforms[i][j].coorY - 1 ) 
+			{
+			    	if( platforms[i][j].platformsAttached < 2 ){
 
-		for(int j = 0; j< platforms[i].size(); j++ ){
-
-            Platform size = platforms[i][j];
-            if ( this-> coorY == platforms[i][j].coorY )
-            {
-                if ( this-> coorX < platforms[i][j].coorX + 1 && this-> coorX > platforms[i][j].coorY - 1 ) {
-                    this->isAttached = true;
-                    this->dir = PLATFORM;
-                    this->assignedPlatform = &platforms[i][j];
-                    move();
-                    vector<Platform> size = platforms[i];
-                    return true;
-                }
-            }
+					deattachPlatform.lock();
+					platforms[i][j].deattach = false;
+					deattachPlatform.unlock();
+					isAttached = true;
+					this->dir = PLATFORM_NORTH;
+					this->assignedPlatform = &platforms[i][j];
+					platforms[i][j].platformsAttached += 1;
+					move();
+					return true;
+				}
+				else {
+					if( platforms[i][j].platformsAttached == 2){
+						deattachPlatform.lock();
+						platforms[i][j].deattach = true;
+						deattachPlatform.unlock();}
+				}	
+			}
+		    }
 		}
 	}
+}	
+
+
+
+
+void Circle::isDeattach(){
+	if(assignedPlatform->deattach){
+		//add mutex to decrement valu
+		
+		int choose = rand() % 3;
+		Direction array[3] = { SOUTH , SOUTH_WEST, SOUTH_EAST };
+		addingCircle.lock();
+		assignedPlatform->platformsAttached -= 1;
+		addingCircle.unlock();
+		dir =  array[choose];
+		move();
+		
+	}
 }
-
-
 
 
 double Circle::getSpeed(){
@@ -290,16 +319,40 @@ void Circle::move(){
                 } else { break; }
 
 
-        case PLATFORM:
+        case PLATFORM_NORTH:
             if (isAttached) {
                 coorX = this->assignedPlatform->coorX;
-                coorY = this->assignedPlatform->coorY-1;
-                usleep(assignedPlatform->speed);
+		if(assignedPlatform->platformsAttached == 1){
+			dir = PLATFORM_SOUTH;
+			usleep(assignedPlatform->speed);
+			move();
+		}
+		else
+		{
+                	coorY = this->assignedPlatform->coorY-1;
+		}
+		//addingCircle.lock();
+		//addingCircle.unlock();
+		isDeattach();
+	        usleep(assignedPlatform->speed);
                 move();
                 break;
             }
-        }
-	}
+	
+        case PLATFORM_SOUTH:
+            if (isAttached) {
+                coorX = this->assignedPlatform->coorX;
+               	coorY = this->assignedPlatform->coorY+1;
+		//addingCircle.lock();
+		//addingCircle.unlock();
+		isDeattach();
+	        usleep(assignedPlatform->speed);
+		isDeattach();
+                move();
+                break;
+		}
+        
+	}}
 }
 
 std::thread Circle::circleThread(){

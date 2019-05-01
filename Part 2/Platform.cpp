@@ -13,8 +13,8 @@ Platform::Platform(){
 	Direction array[2] = { WEST , EAST };
 	this->speed = rand()% 10000 + 20000;
 	this->coorX= rand() % Platform::xMax - 1;
-	this->coorY= rand() % Platform::yMax - 1;	
-	
+	this->coorY= rand() % (Platform::yMax - 7) + 5;	
+	platformsAttached = 0;
 	//at the beginning no circle is attached to platform
 	//this->topOne = NULL;
 	//this->bottomOne = NULL;

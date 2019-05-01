@@ -16,12 +16,13 @@ class Circle{
 	Direction dir;
 	double speed;
 	int coorX, coorY;
+	
+//mutexes
 
 //List of all platforms in the scene, equal to every circle in the scene
 	static vector<Platform> *platforms;
 	Platform *assignedPlatform;
 	bool isAttached;	
-    int size;
 //Operational functions
 	std::thread circleThread(); 
 	Circle();	
@@ -30,8 +31,10 @@ class Circle{
 
 	static void initScene(int xMax, int yMax);
 	static void initPlatforms(vector<Platform> *platforms);
-
+	
+	void isDeattach();
 	bool ifPlatform();
+
 	int getX();
 	int getY();
 	bool isActive();

@@ -45,7 +45,7 @@ int main(){
 		platVector.push_back(plat);
 	}
 	Circle::initPlatforms(&platVector);
-	for(int i = 0 ; i < 3; i++) {
+	for(int i = 0 ; i < 10; i++) {
 
 		Circle circ;
 		circVector.push_back(circ);
@@ -65,7 +65,7 @@ int main(){
 		threads.push_back( circVector.at(circlesUsed).circleThread() );
 		circlesUsed++;
 		int randTime = rand() % 5 + 1;
-		usleep(500000 * randTime);
+		usleep(300000 * randTime);
 	
 	}
 

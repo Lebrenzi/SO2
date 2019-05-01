@@ -1,2 +1,4 @@
 Na ekranie są poza kuleczkami wędrujące paletki, jeśli kulka dotyka paletki to się przykleja do niej od dołu albo od góry.
 Do paletki przyklejone max 2 kulki, jesli 3 dotyka to 2 pozostale sie odklejają
+
+Sprawdzić mutexy!!

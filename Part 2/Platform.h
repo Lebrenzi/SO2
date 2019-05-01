@@ -18,10 +18,13 @@ class Platform{
 	static int xMax, yMax;
 	static bool initialized;
 	bool active;
-	
+
 	Direction dir;
 	double speed;
 	int coorX, coorY;
+
+	int platformsAttached; //has a number of circles attached to platform
+	bool deattach; //controls if circles can be attached to platform, when third circle approach platform becomes false, after platforms attached is equal 0 becomes false
 
 	std::thread platformThread(); 
 	Platform();	
