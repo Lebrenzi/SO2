@@ -108,6 +108,7 @@ void Platform::move(){
 			break;
 		}
 	}
+	return;
 }
 
 std::thread Platform::platformThread(){

@@ -23,25 +23,11 @@ Circle::Circle(){
 
 	this->coorX = Circle::xMax /2;
 	this->coorY = Circle::yMax -1;	
-
-	switch(choose){
-
-		case 0: 
-			this->dir = array[0];
-			break;
-		case 1:
-			this->dir = array[1];
-			break;
-		case 2: 
-			this->dir = array[2];
-			break;
-		default:
-			this->dir = array[0];
-			break;
-
-	}
+	
+	dir = array[choose];
 
 }
+
 
 Circle::~Circle(){
 
@@ -78,36 +64,31 @@ int Circle::getY(){
 }
 
 
-bool Circle::ifPlatform(){
-	for ( int i = 0; i < 1; i++){
-		for(int j = 0; j< platforms[i].size(); j++ )
+void Circle::ifPlatform(){
+		for(int j = 0; j< platforms[0].size(); j++ )
 		{
-		    if ( this-> coorY == platforms[i][j].coorY )
-		    {
-			if ( this-> coorX < platforms[i][j].coorX + 1 && this-> coorX > platforms[i][j].coorY - 1 ) 
-			{
-			    	if( platforms[i][j].platformsAttached < 2 ){
-
+		    if ( coorY >= platforms[0][j].coorY - 3 && coorY <= platforms[0][j].coorY + 3 )
+		    { if(coorX >= platforms[0][j].coorX - 3 && coorX <= platforms[0][j].coorX + 3 ){ 
+				if( platforms[0][j].platformsAttached < 2 ){
 					deattachPlatform.lock();
-					platforms[i][j].deattach = false;
+					platforms[0][j].deattach = false;
 					deattachPlatform.unlock();
 					isAttached = true;
 					this->dir = PLATFORM_NORTH;
-					this->assignedPlatform = &platforms[i][j];
-					platforms[i][j].platformsAttached += 1;
+					this->assignedPlatform = &platforms[0][j];
+					addingCircle.lock();
+					platforms[0][j].platformsAttached += 1;
+					addingCircle.unlock();
 					move();
-					return true;
 				}
-				else {
-					if( platforms[i][j].platformsAttached == 2){
-						deattachPlatform.lock();
-						platforms[i][j].deattach = true;
-						deattachPlatform.unlock();}
-				}	
+				if( platforms[0][j].platformsAttached == 2){
+					deattachPlatform.lock();
+					platforms[0][j].deattach = true;
+					deattachPlatform.unlock();
+				}
 			}
 		    }
 		}
-	}
 }	
 
 
@@ -115,14 +96,12 @@ bool Circle::ifPlatform(){
 
 void Circle::isDeattach(){
 	if(assignedPlatform->deattach){
-		//add mutex to decrement valu
-		
 		int choose = rand() % 3;
 		Direction array[3] = { SOUTH , SOUTH_WEST, SOUTH_EAST };
 		addingCircle.lock();
 		assignedPlatform->platformsAttached -= 1;
 		addingCircle.unlock();
-		dir =  array[choose];
+		dir = array[choose];
 		move();
 		
 	}
@@ -320,39 +299,28 @@ void Circle::move(){
 
 
         case PLATFORM_NORTH:
-            if (isAttached) {
                 coorX = this->assignedPlatform->coorX;
 		if(assignedPlatform->platformsAttached == 1){
 			dir = PLATFORM_SOUTH;
 			usleep(assignedPlatform->speed);
 			move();
 		}
-		else
-		{
-                	coorY = this->assignedPlatform->coorY-1;
-		}
-		//addingCircle.lock();
-		//addingCircle.unlock();
+                coorY = this->assignedPlatform->coorY-1;
 		isDeattach();
-	        usleep(assignedPlatform->speed);
+		usleep(assignedPlatform->speed);
                 move();
                 break;
-            }
 	
         case PLATFORM_SOUTH:
-            if (isAttached) {
                 coorX = this->assignedPlatform->coorX;
                	coorY = this->assignedPlatform->coorY+1;
-		//addingCircle.lock();
-		//addingCircle.unlock();
 		isDeattach();
-	        usleep(assignedPlatform->speed);
-		isDeattach();
+		usleep(assignedPlatform->speed);
                 move();
                 break;
-		}
         
 	}}
+	return;
 }
 
 std::thread Circle::circleThread(){

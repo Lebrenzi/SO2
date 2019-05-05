@@ -33,7 +33,7 @@ class Circle{
 	static void initPlatforms(vector<Platform> *platforms);
 	
 	void isDeattach();
-	bool ifPlatform();
+	void ifPlatform();
 
 	int getX();
 	int getY();
