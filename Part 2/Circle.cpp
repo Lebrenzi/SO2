@@ -70,18 +70,23 @@ void Circle::ifPlatform(){
 		    if ( coorY >= platforms[0][j].coorY - 3 && coorY <= platforms[0][j].coorY + 3 )
 		    { if(coorX >= platforms[0][j].coorX - 3 && coorX <= platforms[0][j].coorX + 3 ){ 
 				if( platforms[0][j].platformsAttached < 2 ){
+					
 					deattachPlatform.lock();
 					platforms[0][j].deattach = false;
 					deattachPlatform.unlock();
+					
 					isAttached = true;
 					this->dir = PLATFORM_NORTH;
 					this->assignedPlatform = &platforms[0][j];
+					
 					addingCircle.lock();
 					platforms[0][j].platformsAttached += 1;
 					addingCircle.unlock();
+					
 					move();
 				}
 				if( platforms[0][j].platformsAttached == 2){
+					
 					deattachPlatform.lock();
 					platforms[0][j].deattach = true;
 					deattachPlatform.unlock();
@@ -98,9 +103,11 @@ void Circle::isDeattach(){
 	if(assignedPlatform->deattach){
 		int choose = rand() % 3;
 		Direction array[3] = { SOUTH , SOUTH_WEST, SOUTH_EAST };
+		
 		addingCircle.lock();
 		assignedPlatform->platformsAttached -= 1;
 		addingCircle.unlock();
+		
 		dir = array[choose];
 		move();
 		

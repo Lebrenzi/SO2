@@ -1,6 +1,5 @@
 #include <ncurses.h>
-#include <thread>
-#include "Circle.h"
+#include "Client.h"
 #include <signal.h>
 bool running = true; 
 bool program = true;
