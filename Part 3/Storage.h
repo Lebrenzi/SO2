@@ -1,14 +1,20 @@
 #include "Direction.h"
 
-public class Storage
+class Storage
 {
 
 public:
+	
+	static int xMax, yMax;
+	static char character;
+	int coorX, coorY;
 	int products;
 	bool active;
 
-	void decreaseProduct();
-	void increaseProduct();
-	int getProducts();
+	Storage();
+	~Storage();
+	std::thread storageThread(); 
+	
+	static void initScene(int xMax, int yMax);
 	void live();
-}
+};

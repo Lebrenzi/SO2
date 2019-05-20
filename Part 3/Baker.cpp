@@ -1,15 +1,25 @@
 #include "Baker.h"
 
+char Baker::character = '@';
+int Baker::xMax;
+int Baker::yMax;
 
-int Baker::getBakeTime(){
-	
-	return bake_time;
+Baker::Baker(){
+
 
 }
 
-void Baker::setBakeTime(int bake_time){
-	this->bake_time = bake_time;	
+Baker::~Baker()
+{
 
+
+}
+
+
+void Baker::initScene(int xMax, int yMax){
+	
+	Baker::xMax = xMax;
+	Baker::yMax = yMax;
 }
 
 void Baker::bake()

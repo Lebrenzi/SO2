@@ -1,18 +1,28 @@
 #include "Storage.h"
 
 
+char Storage::character = '@';
+int Storage::xMax;
+int Storage::yMax;
 
-void Storage::decreaseProduct()
+Storage::Storage(){
+
+
+}
+
+Storage::~Storage()
 {
-	products-=1;
+
+
 }
 
 
-
-void Storage::increaseProduct()
-{
-	products+=1;
+void Storage::initScene(int xMax, int yMax){
+	
+	Storage::xMax = xMax;
+	Storage::yMax = yMax;
 }
+
 
 
 void Storage::live(){
