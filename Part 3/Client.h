@@ -7,7 +7,9 @@ public:
 	
 	static int xMax, yMax;
 	static char character;	
+	static vector<Cashbox> *cashboxes;
 
+	int cashbox_idx;
 	bool active;
 	bool is_waiting;	
 	
@@ -19,7 +21,9 @@ public:
 	Client();
 	~Client();
 	std::thread clientThread(); 
-	
+	void freeCashbox();
+
+	static void initCashboxes(vector<Cashbox> *cashboxes);	
 	static void initScene(int xMax, int yMax);
 	
 

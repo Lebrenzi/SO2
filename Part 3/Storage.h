@@ -6,7 +6,7 @@ class Storage
 public:
 	
 	static int xMax, yMax;
-	static char character;
+	static const char* character;
 	int coorX, coorY;
 	int products;
 	bool active;

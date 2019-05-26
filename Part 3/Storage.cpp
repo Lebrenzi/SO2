@@ -1,13 +1,13 @@
 #include "Storage.h"
 
 
-char Storage::character = '@';
+const char* Storage::character;
 int Storage::xMax;
 int Storage::yMax;
 
 Storage::Storage(){
 
-
+	products = 9;
 }
 
 Storage::~Storage()
@@ -29,9 +29,17 @@ void Storage::live(){
 
 	while(active)
 	{
-
+		std::string s = std::to_string(products);
+		
+		character = s.c_str(); 
 		usleep(100000);
 	}
 
 }
+
+std::thread Storage::storageThread(){
+	
+	return std::thread(&Storage::live, this);
+}
+
 
