@@ -44,8 +44,9 @@ void Cashbox::work()
 			if(product_quantity == 0)
 			{
 				if(storage[0].products > 0){
+					
+					storage[0].decreaseProducts();
 					storageMutex.lock();
-					storage[0].products -= 1;
 					product_quantity += 1;
 					storageMutex.unlock();
 				}

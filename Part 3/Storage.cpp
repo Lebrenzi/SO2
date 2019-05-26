@@ -4,6 +4,7 @@
 const char* Storage::character;
 int Storage::xMax;
 int Storage::yMax;
+std::mutex backdoorMutex;
 
 Storage::Storage(){
 
@@ -35,6 +36,20 @@ void Storage::live(){
 		usleep(100000);
 	}
 
+}
+
+void Storage::increaseProducts()
+{
+	backdoorMutex.lock();
+	products += 1;
+	backdoorMutex.unlock();
+}
+
+void Storage::decreaseProducts()
+{
+	backdoorMutex.lock();
+	products -= 1;
+	backdoorMutex.unlock();
 }
 
 std::thread Storage::storageThread(){

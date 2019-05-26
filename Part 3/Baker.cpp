@@ -8,6 +8,7 @@ Storage* Baker::storage;
 
 Baker::Baker(){
 
+	state = IDLE;
 
 }
 
@@ -48,15 +49,14 @@ void Baker::bake()
 				else
 				{
 					usleep(50000);
+					bake();
 				}
 				
 				break;
 
 			case BAKE:
 				usleep(5000000);
-				strMutex.lock();
-				storage[0].products += 1;
-				strMutex.unlock();
+				storage[0].increaseProducts();
 				usleep(50000);
 				state = IDLE;
 				bake();

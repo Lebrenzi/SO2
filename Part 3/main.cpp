@@ -44,7 +44,7 @@ void refreshScreen()
 		
 		refresh();
 		// Refresh every 0.01 s
-		usleep(5000);
+		usleep(10000);
 	}
 }
 

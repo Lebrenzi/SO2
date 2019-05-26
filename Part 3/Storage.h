@@ -15,6 +15,8 @@ public:
 	~Storage();
 	std::thread storageThread(); 
 	
+	void increaseProducts();
+	void decreaseProducts();
 	static void initScene(int xMax, int yMax);
 	void live();
 };
